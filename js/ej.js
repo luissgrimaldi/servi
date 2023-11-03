@@ -1,0 +1,2 @@
+scanf("%d", "y");
+validarDato
