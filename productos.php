@@ -17,9 +17,13 @@
                 </div>
                 <div class="main__decoration"></div>
                 <div class="main__atajos atajos">
-                    <div class="atajos__atajo"  onClick="window.location='agregarproducto.php'">
+                    <div class="atajos__atajo"  onClick="window.location='crearproducto.php'">
                         <i class="fa-solid fa-box atajo__emoji"></i>
                         <h2 class="atajo__h2">Agregar producto</h2>
+                    </div> 
+                    <div class="atajos__atajo"  onClick="window.location='crearproducto.php'">
+                        <i class="fa-solid fa-clipboard atajo__emoji"></i>
+                        <h2 class="atajo__h2">Gestionar stock</h2>
                     </div> 
                     <div class="atajos__atajo" onclick="window.open('https:www.bbva.com.ar', '_blank');">
                         <i class="fa-solid fa-magnifying-glass atajo__emoji"></i>
@@ -45,11 +49,13 @@
                                     $id = $usuario['id'];                                                             
                                     $nombre = $usuario['name'];                                                                                                                        
                                     $cod = $usuario['cod'];                                                                                                                     
+                                    $price = $usuario['price'];                                                                                                                     
                                 ?> 
                                 <li class="propiedades__li" id="li<?php echo $id?>">
                                     <div class="propiedades__nombre-detalles-precio">
                                         <span class="propiedades__nombre"><?php echo $nombre.' ('.$cod.')';?></span>
-                                    </div>            
+                                        <span class="propiedades__precio">$ <?php echo $price;?></span>
+                                    </div>                        
                                     <div class="consultas__bloque consultas__bloque--edit-search-reload"> 
                                         <div class="consultas__bloque__content consultas__edit-search-reload">
                                             <a class="consultas__edit-search-reload__content" href="admineditar.php?page=usuario&id=<?php echo $id?>"><i class="consultas__accion fa-solid fa-pencil"></i><span>Editar</span></a>                                       

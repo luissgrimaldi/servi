@@ -33,10 +33,17 @@ function agregarProducto($connect): void{
     $query = $connect-> prepare ("INSERT INTO products (cod, name, price) VALUES (?, ?, ?)");
     $query->execute([$cod, $name, $price]);
     if($query){
-        echo json_encode("Producto agregado con exito");
+        $response = [
+            'status'=> 'success',
+            'message'=> 'Producto agregado con exito'
+        ];
     }else{
-        echo json_encode("Ha ocurrido un error al agregar el producto");
+        $response = [
+            'status'=> 'error',
+            'message'=> 'Ha ocurrido un error al agregar el producto'
+        ];
     }
+    echo json_encode($response);
 }
 
 
