@@ -20,7 +20,11 @@
                     <div class="atajos__atajo"  onClick="window.location='agregarproducto.php'">
                         <i class="fa-solid fa-box atajo__emoji"></i>
                         <h2 class="atajo__h2">Agregar producto</h2>
-                    </div>                  
+                    </div> 
+                    <div class="atajos__atajo" onclick="window.open('https:www.bbva.com.ar', '_blank');">
+                        <i class="fa-solid fa-magnifying-glass atajo__emoji"></i>
+                        <h2 class="atajo__h2">Buscar productos</h2>
+                    </div>                 
                 </div>
                 <div class="main__decoration"></div>           
                     <div class="main__perfil">                   

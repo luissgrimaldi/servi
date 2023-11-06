@@ -12,7 +12,7 @@
                 </div>
                 <div class="main__decoration"></div>
                 <div class="main__busqueda-propiedad">             
-                    <form autocomplete="off" id="addPropiedadForm" class="form__busqueda-propiedad form" name="form" method="POST" action="backend/agregar.php?page=propiedad" enctype="multipart/form-data">                                     
+                    <form autocomplete="off" id="addPropiedadFom" class="form__busqueda-propiedad form" name="form" method="POST" action="backend/crearfactura.php" enctype="multipart/form-data">                                     
                         <h2 class="main__h2">Cliente</h2>
                         <div class="form__bloque">
                             <div class="form__bloque__content content">
@@ -23,7 +23,7 @@
                         <div class="form__bloque">
                             <div class="form__bloque__content content">
                                 <label  class="form__label content__label" for="">Nombre</label>
-                                <input type="text" class="form__text content__text" name="inputContacto" id="inputContacto" readonly="readonly"> 
+                                <input type="text" class="form__text content__text" name="inputNombre" id="inputContacto" readonly="readonly"> 
                             </div>                          
                             <div class="form__bloque__content content">
                                 <label  class="form__label content__label" for="">Codigo Cliente</label>
@@ -33,7 +33,7 @@
                                 <label  class="form__label content__label" for="">Teléfono</label>
                                 <input type="text" class="form__text content__text" name="inputTelefono" id="inputTelefono" readonly="readonly"> 
                             </div>                          
-                            <input type="hidden" class="form__text content__text" name="contacto_id" id="contacto_id">
+                            <input type="hidden" class="form__text content__text" name="cliente_id" id="cliente_id">
                         </div>
                         <div class="main__decoration"></div>
                         <h2 class="main__h2">Producto</h2>
