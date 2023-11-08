@@ -3,7 +3,7 @@ include 'connect.php';
 
 $campo = trim($_POST['buscadorproductos2']);
 
-$sentencia2 = $connect->prepare("SELECT * FROM `products`"); // 1 siempre es verdadero
+$sentencia2 = $connect->prepare("SELECT * FROM `products`");
 
 if (!empty($campo)) {
     $sentencia2 = $connect->prepare("SELECT * FROM `products` WHERE trim(name) LIKE ? OR `cod` LIKE ?");
