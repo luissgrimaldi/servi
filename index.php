@@ -20,21 +20,7 @@
                     <div class="atajos__atajo" onclick="window.open('https:www.interbanking.com.ar', '_blank');">
                         <img class="atajo__img" src="media/logos-marcas-empresas/logo_interbanking.png" alt="">
                     </div>
-                </div>
-                <div class="main__atajos atajos">
-                    <div class="atajos__atajo"  onClick="window.location='facturacion.php'">
-                        <i class="fa-solid fa-receipt atajo__emoji"></i>
-                        <h2 class="atajo__h2">Facturación</h2>
-                    </div>
-                    <div class="atajos__atajo" onClick="window.location='productos.php'">
-                        <i class="fa-solid fa-box atajo__emoji"></i>
-                        <h2 class="atajo__h2">Productos</h2>
-                    </div>                   
-                    <div class="atajos__atajo" onClick="window.location='clientes.php'">
-                        <i class="fa-solid fa-address-book atajo__emoji"></i>
-                        <h2 class="atajo__h2">Clientes</h2>
-                    </div>                   
-                </div>
+                </div>          
             </div>  
         </main>
         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->

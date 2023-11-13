@@ -11,9 +11,9 @@
                         <i class="fa-solid fa-receipt atajo__emoji"></i>
                         <h2 class="atajo__h2">Crear factura</h2>
                     </div>
-                    <div class="atajos__atajo" onclick="window.open('https:www.bbva.com.ar', '_blank');">
+                    <div class="atajos__atajo" onclick="window.location='verfacturas.php'">
                         <i class="fa-solid fa-magnifying-glass atajo__emoji"></i>
-                        <h2 class="atajo__h2">Buscar Factura</h2>
+                        <h2 class="atajo__h2">Ver Facturas</h2>
                     </div>                   
                 </div>
                 <div class="main__decoration"></div>

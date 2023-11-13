@@ -13,17 +13,13 @@
                         <i class="fa-solid fa-box atajo__emoji"></i>
                         <h2 class="atajo__h2">Agregar producto</h2>
                     </div> 
-                    <div class="atajos__atajo"  onClick="window.location='crearproducto.php'">
-                        <i class="fa-solid fa-clipboard atajo__emoji"></i>
-                        <h2 class="atajo__h2">Gestionar stock</h2>
-                    </div> 
                     <div class="atajos__atajo" onclick="window.open('categorias.php', '_blank');">
                         <i class="fa-solid fa-magnifying-glass atajo__emoji"></i>
                         <h2 class="atajo__h2">Categorias</h2>
                     </div>                 
-                    <div class="atajos__atajo" onclick="window.open('buscarproductos.php', '_blank');">
+                    <div class="atajos__atajo" onclick="window.open('verproductos.php', '_blank');">
                         <i class="fa-solid fa-magnifying-glass atajo__emoji"></i>
-                        <h2 class="atajo__h2">Buscar productos</h2>
+                        <h2 class="atajo__h2">Ver productos</h2>
                     </div>                 
                 </div>
                 <div class="main__decoration"></div>           
