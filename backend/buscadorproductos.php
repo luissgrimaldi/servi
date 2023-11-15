@@ -9,19 +9,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sentencia->execute([$codigoProducto]);
 
     $respuesta = array("success" => false, "nombreProducto" => "", "precioProducto" => "", "mensaje" => "");
-
-    while ($row = $sentencia->fetch()) {
-        // Aquí puedes personalizar cómo deseas obtener la información del producto
-        $nombreProducto = trim($row["name"]);
-        $precioProducto = trim($row["price"]);
-        $respuesta["success"] = true;
-        $respuesta["nombreProducto"] = $nombreProducto;
-        $respuesta["precioProducto"] = $precioProducto;
+    if ($codigoProducto!= ''){
+        while ($row = $sentencia->fetch()) {
+            // Aquí puedes personalizar cómo deseas obtener la información del producto
+            $nombreProducto = trim($row["name"]);
+            $precioProducto = trim($row["price"]);
+            $respuesta["success"] = true;
+            $respuesta["nombreProducto"] = $nombreProducto;
+            $respuesta["precioProducto"] = $precioProducto;
+        }
+    
+        if (!$respuesta["success"]) {
+            $respuesta["mensaje"] = "Producto no encontrado";
+        }
+    }else{
+        $respuesta = array("success" => true, "nombreProducto" => "", "precioProducto" => "", "mensaje" => "");
     }
 
-    if (!$respuesta["success"]) {
-        $respuesta["mensaje"] = "Producto no encontrado";
-    }
 
     echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
 }

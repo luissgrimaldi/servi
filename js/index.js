@@ -159,7 +159,9 @@ function getProductos2() {
     let pagination = document.querySelector(".pagination")
 
     if (buscador.length > 0) {
-        pagination.style.display = "none";
+        if(pagination){
+            pagination.style.display = "none";
+        }
         lista1.style.display = "none";
         lista.style.display = "block"; 
         let url = "backend/buscadorproductos2.php"

@@ -1,24 +1,30 @@
 <?php
 include 'connect.php';
 
-$campo = trim($_POST['buscadorclientes']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener el código del Cliente desde la solicitud POST
+    $codigoCliente = trim($_POST['codigoCliente']);
 
-$sentencia2 = $connect->prepare("SELECT * FROM `customers` WHERE trim(name) LIKE ? OR `cod` LIKE ?") or die('query failed');
-$sentencia2->execute([$campo . '%', $campo . '%']);
- 
-$html = "";    
+    $sentencia = $connect->prepare("SELECT * FROM `customers` WHERE `cod` = ?") or die('query failed');
+    $sentencia->execute([$codigoCliente]);
 
-while($row = $sentencia2->fetch()){
+    $respuesta = array("success" => false, "nombreCliente" => "", "mensaje" => "");
+    if ($codigoCliente!= ''){
+        while ($row = $sentencia->fetch()) {
+            // Aquí puedes personalizar cómo deseas obtener la información del Cliente
+            $nombreCliente = trim($row["name"]);
+            $respuesta["success"] = true;
+            $respuesta["nombreCliente"] = $nombreCliente;
+        }
+    
+        if (!$respuesta["success"]) {
+            $respuesta["mensaje"] = "Cliente no encontrado";
+        }
+    }else{
+        $respuesta = array("false" => true, "nombreCliente" => "", "mensaje" => "Este campo no puede estar vacío");
+    }
 
-    $html .= '<li onclick="seleccionarCliente('.$row["id"]. ", '".trim($row["name"])."'". ", '".trim($row["cod"])."'".')">'.trim($row["cod"])." ".trim($row["name"]).'</li>';
 
-
-};      
- 
-echo json_encode($html, JSON_UNESCAPED_UNICODE);
-
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+}
 ?>
-
-
-
- 

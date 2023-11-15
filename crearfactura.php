@@ -14,7 +14,7 @@
                             </div>                         
                             <ul class="propiedades__ul" id="listaProductos">
                             <?php
-                                $sentencia = $connect->prepare("SELECT * FROM products") or die('query failed');
+                                $sentencia = $connect->prepare("SELECT * FROM products ORDER BY 'cod' ASC") or die('query failed');
                                 $sentencia->execute();
                                 $list_usuarios = $sentencia->fetchAll();
                                 $consultasTotalesActuales = $sentencia->rowCount();
@@ -51,8 +51,7 @@
                         <h2 class="main__h2">Cliente</h2>
                         <div class="form__bloque">
                             <div class="form__bloque__content content">
-                                <input type="text" class="form__text content__text" placeholder="Ingrese nombre del cliente" name="buscadorclientes" id="buscadorclientes" autocomplete="off"> 
-                                <ul class="content_ul" id="listaClientes"></ul>                
+                                <input type="text" class="form__text content__text editableFormCodCliente" placeholder="Ingrese nombre del cliente" name="codigoCliente" autocomplete="off">               
                             </div>       
                         </div>                               
                         <div class="form__bloque">
@@ -71,13 +70,7 @@
                             <input type="hidden" class="form__text content__text" name="cliente_id" id="cliente_id">
                         </div>
                         <div class="main__decoration"></div>
-                        <h2 class="main__h2">Producto</h2>
-                        <div class="form__bloque">
-                            <div class="form__bloque__content content">
-                                <input type="text" class="form__text content__text" placeholder="Ingrese nombre del producto" name="buscadorproductos" id="buscadorproductos" autocomplete="off"> 
-                                <ul class="content_ul" id="listaProductos"></ul>                
-                            </div>     
-                        </div>                               
+                        <h2 class="main__h2">Producto</h2>                               
                         <div class="form__bloque">
                             <table>
                                 <tr>
@@ -86,19 +79,19 @@
                                     <td>Precio</td>
                                 </tr>
                                 <tr>
-                                    <td class="editableForm editable" contenteditable="true"></td>
+                                    <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
                                     <td class="editable" contenteditable="true"></td>
                                     <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
                                 </tr>
                                 <tr>
-                                    <td class="editableForm editable" contenteditable="true"></td>
+                                    <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
                                     <td class="editable" contenteditable="true"></td>
                                     <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
                                 </tr>
                                 <tr>
-                                    <td class="editableForm editable" contenteditable="true"></td>
+                                    <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
                                     <td class="editable" contenteditable="true"></td>
                                     <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
@@ -121,15 +114,28 @@
     <script src="js/index.js?<?php echo servicorrVersion;?>"></script>
     <script>
     $(document).ready(function () {
-        $(".editableForm").on("keypress", function (e) {
+        $(".editableFormCodProducto").on("keypress", function (e) {
             if (e.which === 13) { // Verifica si la tecla presionada es "Enter"
                 e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
                 var codigoProducto = $(this).text().trim();
                 var currentEditable = $(this);
-                if(codigoProducto == 00){
+                if(codigoProducto === "00"){
                     $("#modalBuscarProducto").show();
                 }else{
                     buscarNombreProducto(codigoProducto, currentEditable);
+                }
+            }
+        });
+
+        $(".editableFormCodCliente").on("keypress", function (e) {
+            if (e.which === 13) { // Verifica si la tecla presionada es "Enter"
+                e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
+                var codigoCliente = $(this).val().trim();
+                var currentEditableCliente = $(this);
+                if(codigoCliente === "00"){
+                    $("#modalBuscarProducto").show();
+                }else{
+                    buscarNombreCliente(codigoCliente, currentEditableCliente);
                 }
             }
         });
@@ -138,9 +144,9 @@
             if (e.which === 13) { // Verifica si la tecla presionada es "Enter"
             e.preventDefault();
 
-            // Verifica si el elemento actual tiene la clase 'editableForm'
-            if ($(this).hasClass('editableForm')) {
-                return; // No hagas nada si tiene la clase 'editableForm'
+            // Verifica si el elemento actual tiene la clase 'editableFormCodProducto'
+            if ($(this).hasClass('editableFormCodProducto') ||  $(this).hasClass('editableFormCodCliente')){
+                return; // No hagas nada si tiene la clase 'editableFormCodProducto'
             }
 
             // Encuentra el siguiente elemento editable en la misma fila
@@ -178,7 +184,7 @@
                         // Actualiza el contenido de la celda vacía con el precio del producto obtenido
                         currentEditable.next('td').next('td').text(respuesta.precioProducto);
 
-                        // Encuentra el siguiente elemento editableForm y le da foco
+                        // Encuentra el siguiente elemento editableFormCodProducto y le da foco
                         // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
                         var nextEditable = currentEditable.closest('td').nextAll('td.editable:first');
                         if (nextEditable.length === 0) {
@@ -208,8 +214,37 @@
             });
         }
 
+        function buscarNombreCliente(codigoCliente, currentEditableCliente) {
+            // Realiza una solicitud AJAX para obtener el nombre del producto desde nombre_producto.php
+            $.ajax({
+                type: "POST",
+                url: "backend/buscadorclientes.php",
+                data: { codigoCliente: codigoCliente },
+                dataType: "json", // Indica que esperamos un JSON como respuesta
+                success: function (respuesta) {
+                    if (respuesta.success) {
+                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
+                        $('#inputContacto').val(respuesta.nombreCliente);                       
+
+                        // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
+                        //var nextEditable = ($)
+
+                        // Establece el atributo contenteditable, enfoca y selecciona todo el texto
+                        $('.editableFormCodProducto:first').attr('contenteditable', 'true').focus();
+
+
+                    } else {
+                        alert(respuesta.mensaje);
+                    }
+                },
+                error: function () {
+                    alert("Error al buscar el nombre del producto.");
+                }
+            });
+        }
+
         // Manejar el evento submit del formulario
-        $("#tuFormulario").submit(function (e) {
+        $("#addPropiedadFom").submit(function (e) {
             e.preventDefault(); // Evita el comportamiento predeterminado del formulario
             // Puedes agregar lógica adicional aquí si es necesario
         });
