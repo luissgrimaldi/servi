@@ -6,64 +6,41 @@
             <div class="loader-container">
                 <div class="loader"></div>
             </div>
-            <div id="modalEditar" class="modal-BG">                                              
-                <div class="modal">      
-                    <form autocomplete="off" class="form__busqueda-propiedad form" id="formEventoEditar" method="POST">
-                        <input type="hidden" value="" id="idEditar" name="idEditar">      
-                        <h2 class="main__h2">Ficha de agenda</h2>
-                        <div class="form__bloque">
-                            <div class="form__bloque__content--radio content">
-                                <label  class="form__label content__label" for="">Visita</label>
-                                    <input type="radio" name="tipoActividad" id="radioVisitaEditar" onclick=" tipoTareaEdit(1); " value="1">
-                                    <label  class="form__label content__label" for="">Tarea</label>
-                                    <input type="radio" name="tipoActividad" id="radioTareaEditar" onclick=" tipoTareaEdit(2); " value="1">
-                            </div>
-                        
-                        </div>                 
-                        <div class="form__bloque">
-                            <div class="form__bloque__content content">
-                                <label  class="form__label content__label" for="">Asunto</label>
-                                <input type="text" class="form__text content__text" name="asuntoEditar" value="" id="asuntoEditar">                                  
-                            </div>
-                            <div class="form__bloque__content content">
-                                <label  class="form__label content__label" for="">Fecha</label>
-                                <input type="date" class="form__text content__text" name="fechaEditar" value="" id="fechaEditar">                                  
-                            </div>
-                            <div class="form__bloque__content content">
-                                <label  class="form__label content__label" for="">Observaciones</label>
-                                <textarea class="form__textarea content__textarea" name="observacionesEditar" id="observacionesEditar"></textarea>                                 
-                            </div>
-                            <div class="form__bloque__content content">
-                                <label  class="form__label content__label" for="">Hora de inicio</label>
-                                <input type="time" class="form__text content__text" name="horaEditar" id="horaEditar">                                  
-                            </div>
-                            <div class="form__bloque__content content">  
-                                <label  class="form__label content__label" for="">Terminada</label>
-                                <input class="form__checkbox content__checkbox" type="checkbox" name="finalizadaEditar" id="finalizadaEditar" value="1">
-                            </div>  
-                        </div>
-                        <div class="form__bloque">
-                            <div class="form__bloque__content content" id="propiedadContentEditar" style="display:none">
-                                <label  class="form__label content__label" for="">Propiedad</label>
-                                <input type="text" class="form__text content__text" name="buscadorpropiedad3" id="buscadorpropiedad3">
-                                <input type="hidden" class="form__text content__text" name="editar_propiedad_id" id="editar_propiedad_id">  
-                                <ul class="content_ul" id="listaPropiedadesEditar"></ul>
-                                                            
-                            </div>
-                            <div class="form__bloque__content content">
-                                <label  class="form__label content__label" for="">Consulta</label>
-                                <input type="text" class="form__text content__text" name="buscadorconsulta2" id="buscadorconsulta2">
-                                <input type="hidden" class="form__text content__text" name="editar_consulta_id" id="editar_consulta_id">   
-                                <ul class="content_ul" id="listaConsultasEditar"></ul>                               
-                            </div>
-                        </div>                
-                        <input type="hidden" name="submit">
-                        <div class="main__decoration"></div>
-                        <input type="submit" class="form__button" value="Guardar cambios">  
-                        <button type="button" class="form__button form__button--salir" id="salirEditar">Salir</button>                                                          
-                    </form>
-                </div>
-            </div> 
+            <div id="modalBuscarProducto" class="modal-BG">
+                <div class="modal"> 
+                    <div class="form__bloque__content content">
+                                <input type="text" class="form__text content__text" placeholder="Buscar producto" name="buscadorclientes" id="buscadorproductos2" autocomplete="off"> 
+                                <ul class="content_ul" id="listaClientes"></ul>                
+                            </div>                         
+                            <ul class="propiedades__ul" id="listaProductos">
+                            <?php
+                                $sentencia = $connect->prepare("SELECT * FROM products") or die('query failed');
+                                $sentencia->execute();
+                                $list_usuarios = $sentencia->fetchAll();
+                                $consultasTotalesActuales = $sentencia->rowCount();
+                                foreach($list_usuarios as $usuario){
+                                    $id = $usuario['id'];                                                             
+                                    $nombre = $usuario['name'];                                                                                                                        
+                                    $cod = $usuario['cod'];                                                                                                                     
+                                    $price = $usuario['price'];                                                                                                                     
+                                ?> 
+                                <li class="propiedades__li" id="li<?php echo $id?>">
+                                    <div class="propiedades__nombre-detalles-precio">
+                                        <span class="propiedades__nombre"><?php echo $nombre.' ('.$cod.')';?></span>
+                                        <span class="propiedades__precio">$ <?php echo $price;?></span>
+                                    </div>                        
+                                    <div class="consultas__bloque consultas__bloque--edit-search-reload"> 
+                                        <div class="consultas__bloque__content consultas__edit-search-reload">
+                                            <a class="consultas__edit-search-reload__content" href="admineditar.php?page=usuario&id=<?php echo $id?>"><i class="consultas__accion fa-solid fa-pencil"></i><span>Editar</span></a>                                       
+                                            <a onclick="if(confirm('¿Seguro que quieres eliminar este contacto?')) delUser(<?php echo $id?>)" class="consultas__edit-search-reload__content"><i class="consultas__accion fa-solid fa-trash"></i><span>Eliminar</span></a>
+                                        </div>   
+                                    </div>
+                                </li> 
+                                <?php };?>
+                            </ul>   
+                            <ul class="propiedades__ul" id="listaProductos2" style="display:none"></ul> 
+                </div>                      
+            </div>
             <div class="main__container">
                 <div class="main__container__top">
                     <div class="main__title"><i class="fa-solid fa-receipt main__h1--emoji"></i><h1 class="main__h1">Crear factura</h1></div>                    
@@ -149,7 +126,11 @@
                 e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
                 var codigoProducto = $(this).text().trim();
                 var currentEditable = $(this);
-                buscarNombreProducto(codigoProducto, currentEditable);
+                if(codigoProducto == 00){
+                    $("#modalBuscarProducto").show();
+                }else{
+                    buscarNombreProducto(codigoProducto, currentEditable);
+                }
             }
         });
 
@@ -192,7 +173,7 @@
                 success: function (respuesta) {
                     if (respuesta.success) {
                         // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
-                        currentEditable.next('td').text(respuesta.nombreProducto);
+                        currentEditable.next('td').text(respuesta.nombreProducto);                       
 
                         // Actualiza el contenido de la celda vacía con el precio del producto obtenido
                         currentEditable.next('td').next('td').text(respuesta.precioProducto);
