@@ -1,24 +1,28 @@
 <?php
 include 'connect.php';
 
-$campo = trim($_POST['buscadorproductos']);
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener el código del producto desde la solicitud POST
+    $codigoProducto = trim($_POST['codigoProducto']);
 
-$sentencia2 = $connect->prepare("SELECT * FROM `products` WHERE trim(name) LIKE ? OR `cod` LIKE ?") or die('query failed');
-$sentencia2->execute([$campo . '%', $campo . '%']);
- 
-$html = "";    
+    $sentencia = $connect->prepare("SELECT * FROM `products` WHERE `cod` = ?") or die('query failed');
+    $sentencia->execute([$codigoProducto]);
 
-while($row = $sentencia2->fetch()){
+    $respuesta = array("success" => false, "nombreProducto" => "", "precioProducto" => "", "mensaje" => "");
 
-    $html .= '<li onclick="seleccionarProducto('.$row["id"]. ", '".trim($row["name"])."'". ", '".trim($row["cod"])."'". ",'".trim($row["price"])."'".')">'.trim($row["cod"])." ".trim($row["name"]).'</li>';
+    while ($row = $sentencia->fetch()) {
+        // Aquí puedes personalizar cómo deseas obtener la información del producto
+        $nombreProducto = trim($row["name"]);
+        $precioProducto = trim($row["price"]);
+        $respuesta["success"] = true;
+        $respuesta["nombreProducto"] = $nombreProducto;
+        $respuesta["precioProducto"] = $precioProducto;
+    }
 
+    if (!$respuesta["success"]) {
+        $respuesta["mensaje"] = "Producto no encontrado";
+    }
 
-};      
- 
-echo json_encode($html, JSON_UNESCAPED_UNICODE);
-
+    echo json_encode($respuesta, JSON_UNESCAPED_UNICODE);
+}
 ?>
-
-
-
- 

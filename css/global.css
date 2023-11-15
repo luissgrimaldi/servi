@@ -150,6 +150,17 @@ input[type="time"]::-webkit-calendar-picker-indicator:hover {
     text-align: center;
 }
 
+table{
+    border-collapse:collapse;
+    width: 100%;
+}
+
+th, td{
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
 .loader-container {
     position: fixed;
     z-index: 9999;
