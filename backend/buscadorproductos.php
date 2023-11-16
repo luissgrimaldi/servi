@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $respuesta["mensaje"] = "Producto no encontrado";
         }
     }else{
-        $respuesta = array("success" => true, "nombreProducto" => "", "precioProducto" => "", "mensaje" => "");
+        $respuesta = array("end" => true, "nombreProducto" => "", "precioProducto" => "", "mensaje" => "");
     }
 
 
