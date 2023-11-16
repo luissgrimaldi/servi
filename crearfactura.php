@@ -76,24 +76,40 @@
                                 <tr>
                                     <td>Cod</td>
                                     <td>Producto</td>
+                                    <td>Cantidad</td>
                                     <td>Precio</td>
+                                    <td>Bonif 1</td>
+                                    <td>Bonif 2</td>
+                                    <td>Total</td>
                                 </tr>
                                 <tr>
                                     <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
-                                    <td class="editable" contenteditable="true"></td>
+                                    <td class="editable editableQty" contenteditable="true"></td>
+                                    <td class="editable editablePrice" contenteditable="true"></td>
+                                    <td class="editable editableB1" contenteditable="true"></td>
+                                    <td class="editable editableB2" contenteditable="true"></td>
+                                    <td></td>
                                     <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
                                 </tr>
                                 <tr>
                                     <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
-                                    <td class="editable" contenteditable="true"></td>
+                                    <td class="editable editableQty" contenteditable="true"></td>
+                                    <td class="editable editablePrice" contenteditable="true"></td>
+                                    <td class="editable editableB1" contenteditable="true"></td>
+                                    <td class="editable editableB2" contenteditable="true"></td>
+                                    <td></td>
                                     <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
                                 </tr>
                                 <tr>
                                     <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
-                                    <td class="editable" contenteditable="true"></td>
+                                    <td class="editable editableQty" contenteditable="true"></td>
+                                    <td class="editable editablePrice" contenteditable="true"></td>
+                                    <td class="editable editableB1" contenteditable="true"></td>
+                                    <td class="editable editableB2" contenteditable="true"></td>
+                                    <td></td>
                                     <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
                                 </tr>
                             </table>                         
@@ -140,32 +156,80 @@
             }
         });
 
-        $(".editable").on("keypress", function (e) {
-            if (e.which === 13) { // Verifica si la tecla presionada es "Enter"
-            e.preventDefault();
+        $(".editable").on("keypress blur", function (e) {
+            if (e.which === 13 && e.type !== 'blur') { // Verifica si la tecla presionada es "Enter"
+                e.preventDefault();
 
-            // Verifica si el elemento actual tiene la clase 'editableFormCodProducto'
-            if ($(this).hasClass('editableFormCodProducto') ||  $(this).hasClass('editableFormCodCliente')){
-                return; // No hagas nada si tiene la clase 'editableFormCodProducto'
-            }
+                // Verifica si el elemento actual tiene la clase 'editableFormCodProducto'
+                if ($(this).hasClass('editableFormCodProducto') ||  $(this).hasClass('editableFormCodCliente')){
+                    return; // No hagas nada si tiene la clase 'editableFormCodProducto'
+                }
 
-            // Encuentra el siguiente elemento editable en la misma fila
-            var nextEditable = $(this).closest('td').nextAll('td.editable:first');
-            
-            if (nextEditable.length === 0) {
-                // Si no hay más elementos en la misma fila, pasa a la siguiente fila
-                var nextRow = $(this).closest('tr').next('tr');
-                nextEditable = nextRow.find('td.editable:first');
-
-                // Si no hay más filas, no hagas nada
+                // Encuentra el siguiente elemento editable en la misma fila
+                var nextEditable = $(this).closest('td').nextAll('td.editable:first');
+                
                 if (nextEditable.length === 0) {
-                    return;
+                    // Si no hay más elementos en la misma fila, pasa a la siguiente fila
+                    var nextRow = $(this).closest('tr').next('tr');
+                    nextEditable = nextRow.find('td.editable:first');
+
+                    // Si no hay más filas, no hagas nada
+                    if (nextEditable.length === 0) {
+                        return;
+                    }
+                }
+                nextEditable.attr('contenteditable', 'true').focus();
+
+                if ($(this).hasClass('editableQty')){
+                    // Espera un breve momento antes de seleccionar para asegurar que el enfoque se complete
+                    setTimeout(function () {
+                        var range = document.createRange();
+                        range.selectNodeContents(nextEditable[0]);
+                        var sel = window.getSelection();
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }, 10);
                 }
             }
+            if (e.which === 13 || e.type === 'blur'){
+                if ($(this).hasClass('editablePrice')){
+                    var qty = $(this).prev('td').text();
+                    var price = $(this).text();
+                    price = price*qty;
+                    $(this).next('td').next('td').next('td').text(price.toFixed(2));
+                }
 
-            nextEditable.attr('contenteditable', 'true').focus();
-    }
-});
+                if ($(this).hasClass('editableB1')){
+                    var qty = $(this).prev().prev('td').text();
+                    var price = $(this).prev().text();
+                    price = qty*price;
+                    var bonif1 = $(this).text();
+                    var bonif2 = $(this).next().text();
+                    var descuento1 = (price*bonif1)/100;
+                    price = price-descuento1;
+                    if(!isNaN(bonif2)){
+                        var descuento2 = (price*bonif2)/100;
+                        price = price-descuento2;
+                    }
+                    $(this).next('td').next('td').text(price.toFixed(2));
+                }
+
+                if ($(this).hasClass('editableB2')){
+                    var qty = $(this).prev().prev().prev('td').text();
+                    var price = $(this).prev().prev().text();
+                    price = qty*price;
+                    var bonif1 = $(this).prev().text();
+                    var bonif2 = $(this).text();
+                    if(!isNaN(bonif1)){
+                        var descuento1 = (price*bonif1)/100;
+                        price = price-descuento1;
+                    }
+                    var descuento2 = (price*bonif2)/100;
+                    price = price-descuento2;
+                    $(this).next('td').text(price.toFixed(2));
+                }
+            }
+        });
 
 
 
@@ -182,9 +246,8 @@
                         currentEditable.next('td').text(respuesta.nombreProducto);                       
 
                         // Actualiza el contenido de la celda vacía con el precio del producto obtenido
-                        currentEditable.next('td').next('td').text(respuesta.precioProducto);
+                        currentEditable.next('td').next('td').next('td').text(respuesta.precioProducto);
 
-                        // Encuentra el siguiente elemento editableFormCodProducto y le da foco
                         // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
                         var nextEditable = currentEditable.closest('td').nextAll('td.editable:first');
                         if (nextEditable.length === 0) {
@@ -195,17 +258,13 @@
                         // Establece el atributo contenteditable, enfoca y selecciona todo el texto
                         nextEditable.attr('contenteditable', 'true').focus();
 
-                        // Espera un breve momento antes de seleccionar para asegurar que el enfoque se complete
-                        setTimeout(function () {
-                            var range = document.createRange();
-                            range.selectNodeContents(nextEditable[0]);
-                            var sel = window.getSelection();
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        }, 10);
-
                     } else {
                         alert(respuesta.mensaje);
+                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
+                        currentEditable.next('td').text('');                       
+
+                        // Actualiza el contenido de la celda vacía con el precio del producto obtenido
+                        currentEditable.next('td').next('td').text('');
                     }
                 },
                 error: function () {
@@ -235,6 +294,7 @@
 
                     } else {
                         alert(respuesta.mensaje);
+                        $('#inputContacto').val('');
                     }
                 },
                 error: function () {
