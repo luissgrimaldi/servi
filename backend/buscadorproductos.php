@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sentencia = $connect->prepare("SELECT * FROM `products` WHERE `cod` = ?") or die('query failed');
     $sentencia->execute([$codigoProducto]);
 
-    $respuesta = array("success" => false, "nombreProducto" => "", "precioProducto" => "", "mensaje" => "");
+    $respuesta = array("success" => false, "nombreProducto" => "", "precioProducto" => "", "id" => "", "mensaje" => "");
     if ($codigoProducto!= ''){
         while ($row = $sentencia->fetch()) {
             // Aquí puedes personalizar cómo deseas obtener la información del producto
@@ -17,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $respuesta["success"] = true;
             $respuesta["nombreProducto"] = $nombreProducto;
             $respuesta["precioProducto"] = $precioProducto;
+            $respuesta["id"] = $codigoProducto;
         }
     
         if (!$respuesta["success"]) {
