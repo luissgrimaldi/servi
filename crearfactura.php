@@ -72,7 +72,7 @@
                         <div class="main__decoration"></div>
                         <h2 class="main__h2">Producto</h2>                               
                         <div class="form__bloque">
-                            <table>
+                            <table id="productsTable">
                                 <tr>
                                     <td>Cod</td>
                                     <td>Producto</td>
@@ -90,9 +90,9 @@
                                     <td class="editable editableB1"></td>
                                     <td class="editable editableB2"></td>
                                     <td></td>
-                                    <input type="hidden" name="inputCodigoProducto" id="inputCodigoProducto" readonly="readonly"> 
                                 </tr>
                             </table>                         
+                            <input type="hidden" name="inputCodigoProducto[]" id="inputCodigoProducto" readonly="readonly"> 
                         </div>
                         <div class="main__decoration"></div>
                         <input type="hidden" name="submit">
@@ -111,27 +111,43 @@
     <script>
     $(document).ready(function () {
         $(".editableFormCodCliente").select();
-        $(document).on("keypress", ".editableFormCodProducto", function (e) {
-            if (e.which === 13) {
+        var eventoManejado = false;
+
+        $(document).on("keypress focusout", ".editableFormCodProducto", function (e) {
+            // Verifica si el evento ya fue manejado
+            if (eventoManejado) {
+                return;
+            }
+
+            if (e.which === 13 || e.type === 'focusout') {
                 e.preventDefault();
                 var codigoProducto = $(this).text().trim();
                 var currentEditable = $(this);
+
                 if (codigoProducto === "00") {
                     $("#modalBuscarProducto").show();
                 } else {
                     buscarNombreProducto(codigoProducto, currentEditable);
                 }
+
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
             }
         });
 
-        $(".editableFormCodCliente").on("keypress", function (e) {
-            if (e.which === 13) { // Verifica si la tecla presionada es "Enter"
+        $(document).on("keypress", ".editableFormCodCliente", function (e) {
+            if ((e.which === 13)) {
                 e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
                 var codigoCliente = $(this).val().trim();
                 var currentEditableCliente = $(this);
-                if(codigoCliente === "00"){
+                if (codigoCliente === "00") {
                     $("#modalBuscarProducto").show();
-                }else{
+                } else {
                     buscarNombreCliente(codigoCliente, currentEditableCliente);
                 }
             }
@@ -176,6 +192,23 @@
                 }
             }
             if (e.which === 13 || e.type === 'focusout'){
+                
+                if ($(this).hasClass('editableQty') && parseFloat($(this).text()) > 0){
+                    var qty = $(this).text();
+                    var price = $(this).next().text();
+                    price = price*qty;
+                    var bonif1 = $(this).next().next().text();
+                    var bonif2 = $(this).next().next().next().text();
+                    if(!isNaN(bonif1)){
+                        var descuento1 = (price*bonif1)/100;
+                        price = price-descuento1;
+                    }
+                    if(!isNaN(bonif2)){
+                        var descuento2 = (price*bonif2)/100;
+                        price = price-descuento2;
+                    }
+                    $(this).next('td').next('td').next().next('td').text(price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+                }
                 if ($(this).hasClass('editablePrice')){
                     var qty = $(this).prev('td').text();
                     var price = $(this).text();
@@ -190,7 +223,7 @@
                         var descuento2 = (price*bonif2)/100;
                         price = price-descuento2;
                     }
-                    $(this).next('td').next('td').next('td').text(price.toLocaleString('es-ES'));
+                    $(this).next('td').next('td').next('td').text(price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                 }
 
                 if ($(this).hasClass('editableB1')){
@@ -199,15 +232,21 @@
                     price = qty*price;
                     var bonif1 = $(this).text();
                     var bonif2 = $(this).next().text();
-                    if(!isNaN(bonif1)){
+                    if(isNaN(bonif1) || bonif1 == ""){
+                        $(this).text(0);
+                    }
+
+                    if (parseFloat(bonif1) > 0) {
                         var descuento1 = (price*bonif1)/100;
                         price = price-descuento1;
                     }
-                    if(!isNaN(bonif2)){
+
+                    if (parseFloat(bonif2) > 0) {
                         var descuento2 = (price*bonif2)/100;
                         price = price-descuento2;
                     }
-                    $(this).next('td').next('td').text(price.toLocaleString('es-ES'));
+
+                    $(this).next('td').next('td').text(price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                 }
 
                 if ($(this).hasClass('editableB2')){
@@ -216,19 +255,23 @@
                     price = qty*price;
                     var bonif1 = $(this).prev().text();
                     var bonif2 = $(this).text();
-                    if(!isNaN(bonif1)){
+                    if(isNaN(bonif2) || bonif2 == ""){
+                        $(this).text(0);
+                    }
+
+                    if (parseFloat(bonif1) > 0) {
                         var descuento1 = (price*bonif1)/100;
                         price = price-descuento1;
                     }
-                    if(!isNaN(bonif2)){
+
+                    if (parseFloat(bonif2) > 0) {
                         var descuento2 = (price*bonif2)/100;
                         price = price-descuento2;
                     }
-                    $(this).next('td').text(price.toLocaleString('es-ES'));
+                    $(this).next('td').text(price.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
                 }
             }
         });
-
 
         function agregarFila() {
             // Obtiene el valor del código del producto ingresado
@@ -245,7 +288,6 @@
                     '<td class="editable editableB1"></td>' +
                     '<td class="editable editableB2"></td>' +
                     '<td></td>' +
-                    '<input type="hidden" name="inputCodigoProducto" class="form__text content__text" id="inputCodigoProducto" readonly="readonly">' +
                     '</tr>');
             }
         }
@@ -258,12 +300,9 @@
                 data: { codigoProducto: codigoProducto },
                 dataType: "json", // Indica que esperamos un JSON como respuesta
                 success: function (respuesta) {
-                    if (respuesta.success) {
+                    if (respuesta.success) {                    
+                        agregarFila();
                         var nextEditable = currentEditable.closest('td').nextAll('td.editable:first');
-                        var siguienteFila = nextEditable.closest('tr').next('tr');
-                        if (!siguienteFila.hasClass('fila-con-datos')) {
-                            agregarFila();
-                        }
                         // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
                         currentEditable.next('td').text(respuesta.nombreProducto);                       
 
@@ -290,14 +329,9 @@
                         currentEditable.next('td').next('td').next('td').next('td').next('td').next('td').text('');
                     }else {
                         alert(respuesta.mensaje);
-
-                        setTimeout(function () {
-                            var range = document.createRange();
-                            range.selectNodeContents(currentEditable[0]);
-                            var sel = window.getSelection();
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        }, 10);
+                        
+                        currentEditable.text('');
+                        currentEditable.focus();
                         // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
                         currentEditable.next('td').text('');                       
                         currentEditable.next('td').next('td').text('');
@@ -343,17 +377,77 @@
                 }
             });
         }
+        
 
-        $("#addPropiedadFom").on("submit", function (e) {
-            // Muestra una alerta de confirmación y obtiene la respuesta del usuario
-            var respuesta = confirm("¿Estás seguro de crear la factura?");
+        $('#addPropiedadFom').submit(function (e) {
+            e.preventDefault();
 
-            // Si la respuesta es "No", evita el envío del formulario
-            if (!respuesta) {
-                e.preventDefault();
+            var allIds = [];
+            var allQty = [];
+            var allPrice = [];
+            var allBonif1 = [];
+            var allBonif2 = [];
+            
+            // Obtener valores de arrays
+            $('td.editableFormCodProducto').each(function () {
+                var id = $(this).text().trim();
+                if (id) {
+                    allIds.push(id);
+                }
+            });
+            $('td.editableQty').each(function () {
+                var qty = $(this).text().trim();
+                if (qty) {
+                    allQty.push(qty);
+                }
+            });
+            $('td.editablePrice').each(function () {
+                var price = $(this).text().trim();
+                if (price) {
+                    allPrice.push(price);
+                }
+            });
+            $('td.editableB1').each(function () {
+                var b1 = $(this).text().trim();
+                if (b1) {
+                    allBonif1.push(b1);
+                }
+            });
+            $('td.editableB2').each(function () {
+                var b2 = $(this).text().trim();
+                if (b2) {
+                    allBonif2.push(b2);
+                }
+            });
+
+            // Verificar si los arrays tienen al menos un elemento
+            if (allIds.length > 0 && allQty.length > 0 && allPrice.length > 0 && allBonif1.length > 0 && allBonif2.length > 0) {
+                // Preguntar al usuario si desea crear la factura
+                var confirmacion = confirm("¿Desea crear la factura?");
+
+                if (confirmacion) {
+                    // Concatenar los arrays en la cadena de consulta de la URL
+                    var queryString = 'backend/crearfactura.php?arrayIds=' + JSON.stringify(allIds) +
+                        '&arrayQty=' + JSON.stringify(allQty) +
+                        '&arrayPrice=' + JSON.stringify(allPrice) +
+                        '&arrayBonif1=' + JSON.stringify(allBonif1) +
+                        '&arrayBonif2=' + JSON.stringify(allBonif2);
+                        
+                    // Redirigir a la página con la cadena de consulta
+                    window.location.href = queryString;
+                }
+            } else {
+                // Informar al usuario que los arrays están vacíos
+                alert("Debe agregar al menos un producto antes de crear la factura.");
+                $('.editableFormCodProducto:first').focus();
+                eventoManejado = true;
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
             }
         });
-    });
+
+});
 </script>
 </body>
 </html>
