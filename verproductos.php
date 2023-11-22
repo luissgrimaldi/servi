@@ -25,21 +25,25 @@
                             <ul class="propiedades__ul" id="listaProductos">
                             <?php
                                 $inicioConsultasXpagina = ($_GET['pagina'] - 1)*$consultasXpagina; 
-                                $sentencia = $connect->prepare("SELECT * FROM products LIMIT $inicioConsultasXpagina,$consultasXpagina") or die('query failed');
+                                $sentencia = $connect->prepare("SELECT p.id, p.name, p.cod, b.name AS b_name, c.name AS c_name FROM products p
+                                LEFT JOIN brands b ON  p.brand =b.id
+                                LEFT JOIN categories c ON  p.category =c.id
+                                LIMIT $inicioConsultasXpagina,$consultasXpagina") or die('query failed');
                                 $sentencia->execute();
-                                $list_usuarios = $sentencia->fetchAll();
+                                $rows = $sentencia->fetchAll();
                                 $consultasTotalesActuales = $sentencia->rowCount();
                                 echo  '<span class="resultados">';if(($inicioConsultasXpagina + $consultasTotalesActuales) > 0){echo ($inicioConsultasXpagina + 1);}else{echo 0;}; echo'-'.($inicioConsultasXpagina + $consultasTotalesActuales). ' de '. $consultasTotales. ' resultados'.'</span>';
-                                foreach($list_usuarios as $usuario){
-                                    $id = $usuario['id'];                                                             
-                                    $nombre = $usuario['name'];                                                                                                                        
-                                    $cod = $usuario['cod'];                                                                                                                     
-                                    $price = $usuario['price'];                                                                                                                     
+                                foreach($rows as $row){
+                                    $id = $row['id'];                                                             
+                                    $nombre = $row['name'];                                                                                                                        
+                                    $cod = $row['cod'];                                                                                                                     
+                                    $marca = $row['b_name'];                                                                                                                     
+                                    $categoria = $row['c_name'];                                                                                                                     
                                 ?> 
                                 <li class="propiedades__li" id="li<?php echo $id?>">
                                     <div class="propiedades__nombre-detalles-precio">
-                                        <span class="propiedades__nombre"><?php echo $nombre.' ('.$cod.')';?></span>
-                                        <span class="propiedades__precio">$ <?php echo $price;?></span>
+                                        <span class="propiedades__nombre"><?php echo $marca.' '.$nombre.' ('.$cod.')';?></span>
+                                        <span class="propiedades__precio"><?php echo $categoria;?></span>
                                     </div>                        
                                     <div class="consultas__bloque consultas__bloque--edit-search-reload"> 
                                         <div class="consultas__bloque__content consultas__edit-search-reload">

@@ -24,14 +24,17 @@ function agregarProducto($connect): void{
     if(!isset($_POST['cod'])){$_POST['cod']= '';};
     if(!isset($_POST['name'])){$_POST['name']= '';};
     if(!isset($_POST['price'])){$_POST['price']= '';};
+    if(!isset($_POST['marca'])){$_POST['marca']= 1;};
+    if(!isset($_POST['categoria'])){$_POST['categoria']= 1;};
     
     
     $cod = $_POST['cod'];
     $name = $_POST['name'];
-    $price = $_POST['price'];
+    $brand = $_POST['marca'];
+    $category = $_POST['categoria'];
 
-    $query = $connect-> prepare ("INSERT INTO products (cod, name, price) VALUES (?, ?, ?)");
-    $query->execute([$cod, $name, $price]);
+    $query = $connect-> prepare ("INSERT INTO products (cod, name, brand, category) VALUES (?, ?, ?, ?)");
+    $query->execute([$cod, $name, $brand, $category]);
     if($query){
         $response = [
             'status'=> 'success',
