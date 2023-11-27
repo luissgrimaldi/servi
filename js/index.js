@@ -185,18 +185,20 @@ function getProductos2() {
     }
 }
 
-if (document.getElementById("buscadorpropiedad") !== null) { document.getElementById("buscadorpropiedad").addEventListener("keyup", getPropiedad)};
+if (document.getElementById("buscadorproductos3") !== null) { document.getElementById("buscadorproductos3").addEventListener("keyup", getProductos3)};
 
-function getPropiedad() {
+function getProductos3() {
 
-    let buscador = document.getElementById("buscadorpropiedad").value
-    let lista = document.getElementById("listaPropiedades")
+    let buscador = document.getElementById("buscadorproductos3").value
+    let lista1 = document.getElementById("listaProductos")
+    let lista = document.getElementById("listaProductos3")
 
     if (buscador.length > 0) {
-
-        let url = "backend/buscadorpropiedad.php"
+        lista1.style.display = "none";
+        lista.style.display = "block"; 
+        let url = "backend/buscadorproductos3.php"
         let formData = new FormData()
-        formData.append("buscadorpropiedad", buscador)
+        formData.append("buscadorproductos", buscador)
 
         fetch(url, {
             method: "POST",
@@ -209,95 +211,45 @@ function getPropiedad() {
             })
             .catch(err => console.log(err))
     } else {
-        lista.style.display = 'none'
+        lista.style.display = "none"; // Muestra la lista
+        lista1.removeAttribute("style");
     }
 }
 
-function seleccionarPropiedad(id,ref,titulo,direccion,altura) {
+if (document.getElementById("buscadorclientes3") !== null) { document.getElementById("buscadorclientes3").addEventListener("keyup", getClientes3)};
 
-    let buscador = document.getElementById("buscadorpropiedad")
-    let inputPropiedad = document.getElementById("inputPropiedadNombre")
-    let inputHide = document.getElementById("inputPropiedad")
-    let lista = document.getElementById("listaPropiedades")
+function getClientes3() {
+    let buscador = document.getElementById("buscadorclientes3").value
+    let lista1 = document.getElementById("listaClientes")
+    let lista = document.getElementById("listaClientes3")
 
-    buscador.value = '';
-    inputPropiedad.value = 'REF '+ref+': '+titulo+' ('+direccion+' '+altura+')';
-    inputHide.value = id;
-    lista.style.display = 'none'
-    
+    if (buscador.length > 0) {
+        lista1.style.display = "none";
+        let url = "backend/buscadorclientes3.php"
+        let formData = new FormData()
+        formData.append("buscadorclientes", buscador)
+
+        fetch(url, {
+            method: "POST",
+            body: formData,
+            mode: "cors" //Default cors, no-cors, same-origin
+        }).then(response => response.json())
+            .then(data => {
+                lista.style.display = 'block'
+                lista.innerHTML = data
+            })
+            .catch(err => console.log(err))
+    } else {
+        lista1.removeAttribute("style");
+        lista.style.display = 'none';
+    }
 }
+
+
+
 
 function delUser(id) {
         let url = 'backend/eliminar.php?page=producto&id='+id;
-        let lista = document.getElementById('li'+id);
-
-        fetch(url, {
-            mode: "cors" //Default cors, no-cors, same-origin
-        }).then(response =>{       
-                lista.style.display = 'none';
-        })
-            .catch(err => console.log(err))
-
-}
-
-function delCiudad(id) {
-        let url = 'backend/eliminar.php?page=ciudad&id='+id;
-        let lista = document.getElementById('li'+id);
-
-        fetch(url, {
-            mode: "cors" //Default cors, no-cors, same-origin
-        }).then(response =>{       
-                lista.style.display = 'none';
-        })
-            .catch(err => console.log(err))
-
-}
-
-function delZona(id) {
-
-        let url = 'backend/eliminar.php?page=zona&id='+id;
-        let lista = document.getElementById('li'+id);
-
-        fetch(url, {
-            mode: "cors" //Default cors, no-cors, same-origin
-        }).then(response =>{       
-                lista.style.display = 'none';
-        })
-            .catch(err => console.log(err))
-
-}
-
-function delContacto(id) {
-
-        let url = 'backend/eliminar.php?page=contacto&id='+id;
-        let lista = document.getElementById('li'+id);
-
-        fetch(url, {
-            mode: "cors" //Default cors, no-cors, same-origin
-        }).then(response =>{       
-                lista.style.display = 'none';
-        })
-            .catch(err => console.log(err))
-
-}
-
-function delConsulta(id) {
-
-        let url = 'backend/eliminar.php?page=consulta&id='+id;
-        let lista = document.getElementById('li'+id);
-
-        fetch(url, {
-            mode: "cors" //Default cors, no-cors, same-origin
-        }).then(response =>{       
-                lista.style.display = 'none';
-        })
-            .catch(err => console.log(err))
-
-}
-
-function delPropiedad(id) {
-
-        let url = 'backend/eliminar.php?page=propiedad&id='+id;
         let lista = document.getElementById('li'+id);
 
         fetch(url, {

@@ -9,36 +9,73 @@
             <div id="modalBuscarProducto" class="modal-BG">
                 <div class="modal"> 
                     <div class="form__bloque__content content">
-                                <input type="text" class="form__text content__text" placeholder="Buscar producto" name="buscadorclientes" id="buscadorproductos2" autocomplete="off"> 
-                                <ul class="content_ul" id="listaClientes"></ul>                
-                            </div>                         
-                            <ul class="propiedades__ul" id="listaProductos">
-                            <?php
-                                $sentencia = $connect->prepare("SELECT * FROM products ORDER BY 'cod' ASC") or die('query failed');
-                                $sentencia->execute();
-                                $list_usuarios = $sentencia->fetchAll();
-                                $consultasTotalesActuales = $sentencia->rowCount();
-                                foreach($list_usuarios as $usuario){
-                                    $id = $usuario['id'];                                                             
-                                    $nombre = $usuario['name'];                                                                                                                        
-                                    $cod = $usuario['cod'];                                                                                                                     
-                                    $price = $usuario['price'];                                                                                                                     
-                                ?> 
-                                <li class="propiedades__li" id="li<?php echo $id?>">
-                                    <div class="propiedades__nombre-detalles-precio">
-                                        <span class="propiedades__nombre"><?php echo $nombre.' ('.$cod.')';?></span>
-                                        <span class="propiedades__precio">$ <?php echo $price;?></span>
-                                    </div>                        
-                                    <div class="consultas__bloque consultas__bloque--edit-search-reload"> 
-                                        <div class="consultas__bloque__content consultas__edit-search-reload">
-                                            <a class="consultas__edit-search-reload__content" href="admineditar.php?page=usuario&id=<?php echo $id?>"><i class="consultas__accion fa-solid fa-pencil"></i><span>Editar</span></a>                                       
-                                            <a onclick="if(confirm('¿Seguro que quieres eliminar este contacto?')) delUser(<?php echo $id?>)" class="consultas__edit-search-reload__content"><i class="consultas__accion fa-solid fa-trash"></i><span>Eliminar</span></a>
-                                        </div>   
-                                    </div>
-                                </li> 
-                                <?php };?>
-                            </ul>   
-                            <ul class="propiedades__ul" id="listaProductos2" style="display:none"></ul> 
+                        <input type="text" class="form__text content__text" placeholder="Buscar producto" name="buscadorproductos" id="buscadorproductos3" autocomplete="off">               
+                    </div>                         
+                    <ul class="propiedades__ul" id="listaProductos">
+                    <?php
+                        $sentencia = $connect->prepare("SELECT p.id, p.name, p.cod, b.name AS b_name, c.name AS c_name FROM products p
+                        LEFT JOIN brands b ON  p.brand =b.id
+                        LEFT JOIN categories c ON  p.category =c.id
+                        ") or die('query failed');
+                        $sentencia->execute();
+                        $rows = $sentencia->fetchAll();
+                        $consultasTotalesActuales = $sentencia->rowCount();
+                        foreach($rows as $row){
+                            $id = $row['id'];                                                             
+                            $nombre = $row['name'];                                                                                                                        
+                            $cod = $row['cod'];                                                                                                                     
+                            $marca = $row['b_name'];                                                                                                                     
+                            $categoria = $row['c_name'];                                                                                                                     
+                        ?>
+                        <li class="propiedades__li" id="li<?php echo $id?>">
+                            <div class="propiedades__nombre-detalles-precio">
+                                <span class="propiedades__nombre"><?php echo $marca.' '.$nombre.' ('.$cod.')';?></span>
+                                <span class="propiedades__precio"><?php echo $categoria;?></span>
+                            </div>                       
+                            <div class="consultas__bloque consultas__bloque--edit-search-reload"> 
+                                <div class="consultas__bloque__content consultas__edit-search-reload">
+                                    <a class="consultas__edit-search-reload__content selectProduct" data-codproduct="<?php echo $cod;?>"><i class="consultas__accion fa-solid fa-pencil"></i><span>Seleccionar</span></a>
+                                </div>   
+                            </div>
+                        </li> 
+                        <?php };?>
+                    </ul>   
+                    <ul class="propiedades__ul" id="listaProductos3" style="display:none"></ul> 
+                    <div class="main__decoration"></div> 
+                    <button type="button" class="form__button form__button--salir" id="salirProducto">Salir</button> 
+                </div>                      
+            </div>
+            <div id="modalBuscarCliente" class="modal-BG">
+                <div class="modal"> 
+                    <div class="form__bloque__content content">
+                        <input type="text" class="form__text content__text" placeholder="Buscar cliente" name="buscadorclientes" id="buscadorclientes3" autocomplete="off">               
+                    </div>                         
+                    <ul class="propiedades__ul" id="listaClientes">
+                    <?php
+                        $sentencia = $connect->prepare("SELECT * FROM customers") or die('query failed');
+                        $sentencia->execute();
+                        $rows = $sentencia->fetchAll();
+                        $consultasTotalesActuales = $sentencia->rowCount();
+                        foreach($rows as $row){
+                            $id = $row['id'];                                                             
+                            $nombre = $row['name'];                                                                                                                        
+                            $cod = $row['cod'];                                                                                                                   
+                        ?>
+                        <li class="propiedades__li" id="li<?php echo $id?>">
+                            <div class="propiedades__nombre-detalles-precio">
+                                <span class="propiedades__nombre"><?php echo $nombre.' ('.$cod.')';?></span>
+                            </div>                       
+                            <div class="consultas__bloque consultas__bloque--edit-search-reload"> 
+                                <div class="consultas__bloque__content consultas__edit-search-reload">
+                                    <a class="consultas__edit-search-reload__content selectCustomer" data-codcustomer="<?php echo $cod;?>"><i class="consultas__accion fa-solid fa-pencil"></i><span>Seleccionar</span></a>
+                                </div>   
+                            </div>
+                        </li> 
+                        <?php };?>
+                    </ul>   
+                    <ul class="propiedades__ul" id="listaClientes3" style="display:none"></ul> 
+                    <div class="main__decoration"></div> 
+                    <button type="button" class="form__button form__button--salir" id="salirCliente">Salir</button> 
                 </div>                      
             </div>
             <div class="main__container">
@@ -118,7 +155,7 @@
             if (eventoManejado) {
                 return;
             }
-
+            
             if (e.which === 13 || e.type === 'focusout') {
                 e.preventDefault();
                 var codigoProducto = $(this).text().trim();
@@ -126,6 +163,24 @@
 
                 if (codigoProducto === "00") {
                     $("#modalBuscarProducto").show();
+                    $(document).on("click", "#salirProducto", function (e){
+                        $("#modalBuscarProducto").hide();
+                        currentEditable.text('');
+                        currentEditable.focus();
+                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
+                        currentEditable.next('td').text('');                       
+                        currentEditable.next('td').next('td').text('');
+                        currentEditable.next('td').next('td').next('td').text('');
+                        currentEditable.next('td').next('td').next('td').next('td').text('');
+                        currentEditable.next('td').next('td').next('td').next('td').next('td').text('');
+                        currentEditable.next('td').next('td').next('td').next('td').next('td').next('td').text('');
+                    })
+                    $(document).off("click", ".selectProduct").on("click", ".selectProduct", function (e) {
+                        codigoProducto = $(this).data("codproduct");
+                        $("#modalBuscarProducto").hide();
+                        currentEditable.text(codigoProducto);
+                        buscarNombreProducto(codigoProducto, currentEditable);                   
+                    })
                 } else {
                     buscarNombreProducto(codigoProducto, currentEditable);
                 }
@@ -140,16 +195,39 @@
             }
         });
 
-        $(document).on("keypress", ".editableFormCodCliente", function (e) {
-            if ((e.which === 13)) {
+        $(document).on("keypress focusout", ".editableFormCodCliente", function (e) {
+            if (eventoManejado) {
+                return;
+            }
+            if ((e.which === 13 || e.type === 'focusout')) {
                 e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
                 var codigoCliente = $(this).val().trim();
                 var currentEditableCliente = $(this);
                 if (codigoCliente === "00") {
-                    $("#modalBuscarProducto").show();
+                    $("#modalBuscarCliente").show();
+                    $(document).on("click", "#salirCliente", function (e){
+                        $("#modalBuscarCliente").hide();
+                        currentEditableCliente.val('');
+                        currentEditableCliente.select();
+                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
+                        $('#inputContacto').val('');
+                    })
+                    $(document).off("click", ".selectCustomer").on("click", ".selectCustomer", function (e) {
+                        codigoCliente = $(this).data("codcustomer");
+                        $("#modalBuscarCliente").hide();
+                        currentEditableCliente.val(codigoCliente);
+                        buscarNombreCliente(codigoCliente, currentEditableCliente);                  
+                    })
                 } else {
                     buscarNombreCliente(codigoCliente, currentEditableCliente);
                 }
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
             }
         });
 

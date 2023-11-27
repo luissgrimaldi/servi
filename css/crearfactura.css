@@ -318,9 +318,11 @@
 }
 
 .modal{
-    display: block;
+    display: flex;
+    flex-direction: column;
     position: relative;
     margin: 0 auto;
+    gap: 2em;
     width: 90%;
     right: 0;
     left: 0;
@@ -337,6 +339,8 @@
 
 .form__button--salir{
     display: block;
+    width: fit-content;
+    margin: 0 auto;
     text-align: center;
     background-color: red;
     color: var(--color-terciario-main);

@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         while ($row = $sentencia->fetch()) {
             // Aquí puedes personalizar cómo deseas obtener la información del producto
             $nombreProducto = trim($row["name"]);
-            $precioProducto = trim($row["price"]);
+            $precioProducto = 300;
             $respuesta["success"] = true;
             $respuesta["nombreProducto"] = $nombreProducto;
             $respuesta["precioProducto"] = $precioProducto;
