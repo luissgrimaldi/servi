@@ -5,6 +5,7 @@
         padding: 0;
         font: inherit;
         color: black;
+        box-sizing: border-box;
     }
     body {
         font-family: Arial, sans-serif;
@@ -32,10 +33,10 @@
     }
 
     .factura__header {
-        margin: 0 auto;
+        width: 100%;
         text-align: center;
         display: flex;
-        width: 100%;
+        padding: 0 20px;
     }
 
     .factura__disclaimer {
@@ -49,6 +50,7 @@
         align-items: flex-end;
         margin-left: auto;
         text-wrap: nowrap;
+        font-size: 14px;
     }
 
     .datos {
@@ -60,6 +62,66 @@
 
     .fecha {
         font-size: 24px;
+    }
+
+    .factura__first-body{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border: 1.5px solid black;
+        border-radius: 1em;
+        padding: 20px;
+    }
+
+    .datos-comprador{
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .datos-comprador>div{
+        display: flex;
+        gap: 1px;
+    }
+
+    .datos-comprador>div>p{
+        font-weight: bold;
+    }
+
+    .datos-secundarios{
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .datos-secundarios>div{
+        display: flex;
+        gap: 1px;
+    }
+
+    .datos-secundarios>div>p{
+        font-weight: bold;
+    }
+
+    .factura__body{
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    table{
+        border-collapse:collapse;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .table__head{
+        outline: 1px solid black;
+        border-radius: 16px;
+    }
+
+    th, td{
+        padding: 10px 20px;
+        text-align: left;
     }
 </style>
 
@@ -77,6 +139,40 @@
                     <p>Documento No válido como factura</p>
                 </div>
                 <p class="factura__fecha">Fecha: 28/11/2023</p>
+            </div>
+            <div class="factura__first-body">
+                <div class="datos-comprador">
+                    <div class=""><span>Cliente:</span><p>Grippo Marcelo</p></div>
+                    <div class=""><span>Direccion:</span><p>Domingo French 531 Morón</p></div>
+                    <div class=""><span>Telefono:</span><p>112343232</p></div>
+                </div>
+                <div class="datos-secundarios">
+                    <div class=""><span>Cotización nro:</span><p>14554</p></div>
+                    <div class=""><span>Zona:</span><p>20</p></div>
+                    <div class=""><span>Condición:</span><p>Contado</p></div>
+                </div>
+            </div>
+            <div class="factura__body">
+                <table>
+                    <tr class="table__head">
+                        <td>Artículo</td>
+                        <td>Cantidad</td>
+                        <td>Producto</td>
+                        <td>Precio</td>
+                        <td>Bonif 1</td>
+                        <td>Bonif 2</td>
+                        <td>Total</td>
+                    </tr>
+                    <tr>
+                        <td>105</td>
+                        <td>20</td>
+                        <td>Fideo</td>
+                        <td>650</td>
+                        <td>5</td>
+                        <td>6</td>
+                        <td>30450</td>
+                    </tr>
+                </table>  
             </div>
         </div>
     </div>
