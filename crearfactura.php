@@ -88,24 +88,73 @@
                         <h2 class="main__h2">Cliente</h2>
                         <div class="form__bloque">
                             <div class="form__bloque__content content">
-                                <input type="text" class="form__text content__text editableFormCodCliente" placeholder="Ingrese nombre del cliente" name="codigoCliente" autocomplete="off">               
+                                <input type="text" class="form__text content__text editableFormCodCliente" placeholder="Ingrese codigo del cliente" name="codigoCliente" autocomplete="off">               
                             </div>       
                         </div>                               
                         <div class="form__bloque">
                             <div class="form__bloque__content content">
                                 <label  class="form__label content__label" for="">Nombre</label>
-                                <input type="text" class="form__text content__text" name="inputNombre" id="inputContacto" readonly="readonly"> 
+                                <input type="text" class="form__text content__text readonly" name="inputNombre" id="inputContacto" readonly="readonly"> 
                             </div>                          
                             <div class="form__bloque__content content">
                                 <label  class="form__label content__label" for="">Codigo Cliente</label>
-                                <input type="text" class="form__text content__text" name="inputEmail" id="inputEmail" readonly="readonly"> 
+                                <input type="text" class="form__text content__text readonly" id="inputCodigoCliente" readonly="readonly"> 
                             </div>                          
                             <div class="form__bloque__content content">
                                 <label  class="form__label content__label" for="">Teléfono</label>
-                                <input type="text" class="form__text content__text" name="inputTelefono" id="inputTelefono" readonly="readonly"> 
+                                <input type="text" class="form__text content__text readonly" id="inputTelefono" readonly="readonly"> 
+                            </div>                          
+                            <input type="hidden" class="form__text content__text readonly" name="cliente_id" id="cliente_id">
+                        </div>
+                        <div class="form__bloque">
+                            <div class="form__bloque__content content">
+                                <input type="text" class="form__text content__text" name="codigoCondicionPago"  placeholder="Ingrese condición de pago" id="codigoCondicionPago"> 
+                            </div>  
+                        </div>
+                        <div class="form__bloque"> 
+                            <div class="form__bloque__content content">
+                                <label  class="form__label content__label" for="">Condicion de pago</label>                                                    
+                                <input type="text" class="form__text content__text readonly" name="inputCondicionPago" id="inputCondicionPago" readonly="readonly"> 
+                            </div>                          
+                            <div class="form__bloque__content content">
+                                <label  class="form__label content__label" for="">Bonificación</label>
+                                <input type="text" class="form__text content__text readonly" name="inputBonifCondicionPago" id="inputBonifCondicionPago" readonly="readonly"> 
                             </div>                          
                             <input type="hidden" class="form__text content__text" name="cliente_id" id="cliente_id">
                         </div>
+
+                        <div class="form__bloque">                       
+                            <div class="form__bloque__content content">                         
+                                <select class="form__select content__select" name="" id="tipoProducto">
+                                    <option value="1">B. Cambios</option>
+                                    <option value="2">Servicios</option>
+                                    <option value="3">Ambos</option>
+                                </select>
+                            </div>                                              
+                        </div>
+
+                        <div class="form__bloque">
+                            <div class="form__bloque__content content">
+                                <label  class="form__label content__label" for="">Bonificación</label>
+                                <div><input type="text" class="form__text content__text" id="bonificación" placeholder="0" autocomplete="off"><span>%</span></div>                           
+                            </div>       
+                            <div class="form__bloque__content content">
+                                <label  class="form__label content__label" for="">Lista de precios</label>
+                                <input type="text" class="form__text content__text" id="listaPrecios" autocomplete="off">                          
+                            </div>       
+                        </div> 
+
+                        <div class="form__bloque">   
+                            <div class="form__bloque__content content">
+                                <input type="text" class="form__text content__text" name="codigoVendedor" id="codigoVendedor" placeholder="Ingrese código de vendedor" autocomplete="off">                          
+                            </div>       
+                        </div> 
+                        <div class="form__bloque">   
+                            <div class="form__bloque__content content">
+                                <label  class="form__label content__label" for="">Vendedor</label>
+                                <input type="text" class="form__text content__text readonly" id="inputVendedor" autocomplete="off" readonly>                          
+                            </div>       
+                        </div> 
                         <div class="main__decoration"></div>
                         <h2 class="main__h2">Producto</h2>                               
                         <div class="form__bloque">
@@ -120,7 +169,7 @@
                                     <td>Total</td>
                                 </tr>
                                 <tr>
-                                <td class="editableFormCodProducto editable" contenteditable="true"></td>
+                                    <td class="editableFormCodProducto editable" contenteditable="true"></td>
                                     <td></td>
                                     <td class="editable editableQty"></td>
                                     <td class="editable editablePrice"></td>
@@ -195,11 +244,11 @@
             }
         });
 
-        $(document).on("keypress focusout", ".editableFormCodCliente", function (e) {
+        $(document).on("keypress", ".editableFormCodCliente", function (e) {
             if (eventoManejado) {
                 return;
             }
-            if ((e.which === 13 || e.type === 'focusout')) {
+            if ((e.which === 13)) {
                 e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
                 var codigoCliente = $(this).val().trim();
                 var currentEditableCliente = $(this);
@@ -221,6 +270,101 @@
                 } else {
                     buscarNombreCliente(codigoCliente, currentEditableCliente);
                 }
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
+            }
+        });
+
+        $(document).on("keypress", "#codigoCondicionPago", function (e) {
+            if (eventoManejado) {
+                return;
+            }
+            if ((e.which === 13)) {
+                e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
+                var codigoCondicionPago = $(this).val().trim();
+                var currentEditableCondicionPago = $(this);               
+                buscarCondicionPago(codigoCondicionPago, currentEditableCondicionPago);
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
+            }
+        });
+
+        $(document).on("keypress", "#tipoProducto", function (e) {
+            e.preventDefault();
+            if (eventoManejado) {
+                return;
+            }
+            if ((e.which === 13)) {
+
+                $('#bonificación').select();
+                
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
+            }
+        });
+
+        $(document).on("keypress", "#bonificación", function (e) {
+            if (eventoManejado) {
+                return;
+            }
+            if ((e.which === 13)) {
+                e.preventDefault();
+                $('#listaPrecios').select();
+                
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
+            }
+        });
+
+        $(document).on("keypress", "#listaPrecios", function (e) {
+            if (eventoManejado) {
+                return;
+            }
+            if ((e.which === 13)) {
+                e.preventDefault();
+                $('#codigoVendedor').select();           
+                
+                // Marca el evento como manejado
+                eventoManejado = true;
+
+                // Restablece la variable después de un breve tiempo
+                setTimeout(function () {
+                    eventoManejado = false;
+                }, 100);
+            }
+        });
+
+        $(document).on("keypress", "#codigoVendedor", function (e) {
+            if (eventoManejado) {
+                return;
+            }
+            if ((e.which === 13)) {
+                e.preventDefault();
+
+                var codigoVendedor = $(this).val().trim();
+                var currentEditableVendedor = $(this);               
+                buscarNombreVendedor(codigoVendedor, currentEditableVendedor);  
+                
                 // Marca el evento como manejado
                 eventoManejado = true;
 
@@ -381,11 +525,13 @@
                     if (respuesta.success) {                    
                         agregarFila();
                         var nextEditable = currentEditable.closest('td').nextAll('td.editable:first');
+                        var condicionPagoPorcentaje = $('#inputBonifCondicionPago').val();
+                        var precioProducto = precioProducto + (respuesta.precioProducto*condicionPagoPorcentaje)
                         // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
                         currentEditable.next('td').text(respuesta.nombreProducto);                       
 
                         // Actualiza el contenido de la celda vacía con el precio del producto obtenido
-                        currentEditable.next('td').next('td').next('td').text(respuesta.precioProducto);
+                        currentEditable.next('td').next('td').next('td').text(precioProducto);
 
                         // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
                         if (nextEditable.length === 0) {
@@ -436,12 +582,10 @@
                     if (respuesta.success) {
                         // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
                         $('#inputContacto').val(respuesta.nombreCliente);                       
-
-                        // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
-                        //var nextEditable = ($)
+                        $('#inputCodigoCliente').val(respuesta.codigoCliente);                       
 
                         // Establece el atributo contenteditable, enfoca y selecciona todo el texto
-                        $('.editableFormCodProducto:first').attr('contenteditable', 'true').focus();
+                        $('#codigoCondicionPago').select();
 
 
                     } else {
@@ -452,6 +596,68 @@
                 },
                 error: function () {
                     alert("Error al buscar el nombre del producto.");
+                }
+            });
+        }
+
+        function buscarCondicionPago(codigoCondicionPago, currentEditableCondicionPago) {
+            // Realiza una solicitud AJAX para obtener el nombre del producto desde nombre_producto.php
+            $.ajax({
+                type: "POST",
+                url: "backend/buscadorcondicionpago.php",
+                data: { codigoCondicionPago: codigoCondicionPago },
+                dataType: "json", // Indica que esperamos un JSON como respuesta
+                success: function (respuesta) {
+                    if (respuesta.success) {
+                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
+                        $('#inputCondicionPago').val(respuesta.nombreCondicionPago);                       
+                        $('#inputBonifCondicionPago').val(respuesta.bonifCondicionPago);                       
+
+                        // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
+                        //var nextEditable = ($)
+
+                        // Establece el atributo contenteditable, enfoca y selecciona todo el texto
+                        $('#tipoProducto').focus();
+
+
+                    } else {
+                        alert(respuesta.mensaje);
+                        $('#inputCondicionPago').val('');
+                        $('#inputBonifCondicionPago').val('');
+                        currentEditableCondicionPago.select();
+                    }
+                },
+                error: function () {
+                    alert("Error al buscar la condición de pago.");
+                }
+            });
+        }
+
+        function buscarNombreVendedor(codigoVendedor, currentEditableVendedor) {
+            // Realiza una solicitud AJAX para obtener el nombre del producto desde nombre_producto.php
+            $.ajax({
+                type: "POST",
+                url: "backend/buscadorvendedores.php",
+                data: { codigoVendedor: codigoVendedor },
+                dataType: "json", // Indica que esperamos un JSON como respuesta
+                success: function (respuesta) {
+                    if (respuesta.success) {
+                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
+                        $('#inputVendedor').val(respuesta.nombreVendedor);                       
+                        $('#codigoVendedor').val(respuesta.codigoVendedor);                       
+
+                        // Establece el atributo contenteditable, enfoca y selecciona todo el texto
+                        $('.editableFormCodProducto:first').attr('contenteditable', 'true').focus();
+
+
+                    } else {
+                        alert(respuesta.mensaje);
+                        $('#inputVendedor').val('');
+                        currentEditableVendedor.select();
+                    }
+                },
+                error: function () {
+                    alert("Error al buscar el nombre del Vendedor.");
                 }
             });
         }

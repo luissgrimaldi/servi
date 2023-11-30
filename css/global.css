@@ -161,6 +161,10 @@ th, td{
     text-align: left;
 }
 
+select:focus{
+    outline: 0.125em solid var(--color-secundario-main);
+}
+
 .loader-container {
     position: fixed;
     z-index: 9999;

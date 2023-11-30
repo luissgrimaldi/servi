@@ -82,7 +82,7 @@
 
     .datos-comprador>div{
         display: flex;
-        gap: 1px;
+        gap: 2px;
     }
 
     .datos-comprador>div>p{
@@ -97,7 +97,7 @@
 
     .datos-secundarios>div{
         display: flex;
-        gap: 1px;
+        gap: 2px;
     }
 
     .datos-secundarios>div>p{
@@ -123,6 +123,45 @@
     th, td{
         padding: 10px 20px;
         text-align: center;
+    }
+
+    .factura__last-body{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border: 1.5px solid black;
+        border-radius: 1em;
+        padding: 20px;
+    }
+
+    .datos-izquierda{
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .datos-izquierda>div{
+        display: flex;
+        gap: 2px;
+    }
+
+    .datos-izquierda>div>p{
+        font-weight: bold;
+    }
+
+    .datos-derecha{
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .datos-derecha>div{
+        display: flex;
+        gap: 2px;
+    }
+
+    .datos-derecha>div>p{
+        font-weight: bold;
     }
 </style>
 
@@ -175,7 +214,19 @@
                     </tr>
                 </table>  
             </div>
+            <div class="factura__last-body">
+                <div class="datos-izquierda">
+                    <div class=""><span>Kilos:</span><p>10</p></div>
+                    <div class=""><span>Bultos:</span><p>5</p></div>
+                    <div class=""><span>Transporte:</span><p>SERVICORR</p></div>
+                </div>
+                <div class="datos-derecha">
+                    <div class=""><span>Subtotal:</span><p>100000</p></div>
+                    <div class=""><span>Bonificacion 10.00%:</span><p>10000</p></div>
+                    <div class=""><span>Total:</span><p>110000</p></div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
-</html>';
+</html>
