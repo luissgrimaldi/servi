@@ -77,7 +77,7 @@
             if (e.which === 13 || e.type === 'focusout') {
                 e.preventDefault();
                 var currentEditable = $(this);
-               
+                          
                 cambiarPrecio(currentEditable);
                 
 
@@ -97,11 +97,9 @@
             }
             if ((e.which === 13)) {
                 e.preventDefault(); // Evita el comportamiento predeterminado (enviar el formulario)
-                var currentEditable = $(this);
-                var nextEditable = currentEditable.closest('td').nextAll('td.editable:first');
-                nextEditable.focus();
+                verificarLista(currentEditable);
+                $('.editablePrice:first').attr('contenteditable', 'true').focus();
             
-                
                 // Marca el evento como manejado
                 eventoManejado = true;
 
@@ -112,97 +110,51 @@
             }
         });
 
+        function verificarLista(currentEditable) {
+            // Realiza una solicitud AJAX para obtener el nombre del producto desde nombre_producto.php
+            var verificarLista = $('#inputLista').val();
+            $.ajax({
+                type: "POST",
+                url: "backend/verificarlista.php",
+                data: { verificarLista: verificarLista },
+                dataType: "json", // Indica que esperamos un JSON como respuesta
+                success: function (respuesta) {
+                    if (respuesta.success) {
+                        $('.editablePrice:first').attr('contenteditable', 'true').focus();
+                    } else {
+                        alert(respuesta);
+                    }
+                },
+                error: function () {
+                    alert("Error al buscar la lista");
+                    $("#inputLista").select();
+                }
+            });
+        }
+
         
         function cambiarPrecio(currentEditable) {                                 
-            var nextEditable = currentEditable.closest('td').nextAll('td.editable:first');
-            nextEditable.focus();
-            console.log("hola")
+            var nextRow = currentEditable.closest('tr').next('tr');
+            var nextEditable = nextRow.find('td.editable');
+            if (nextEditable.length != 0){
+                nextEditable.focus();
+            }else{
+                $('#submit-button').focus();
+            }
         }
 
-
-        function buscarCondicionPago(codigoCondicionPago, currentEditableCondicionPago) {
-            // Realiza una solicitud AJAX para obtener el nombre del producto desde nombre_producto.php
-            $.ajax({
-                type: "POST",
-                url: "backend/buscadorcondicionpago.php",
-                data: { codigoCondicionPago: codigoCondicionPago },
-                dataType: "json", // Indica que esperamos un JSON como respuesta
-                success: function (respuesta) {
-                    if (respuesta.success) {
-                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
-                        $('#inputCondicionPago').val(respuesta.nombreCondicionPago);                       
-                        $('#inputBonifCondicionPago').val(respuesta.bonifCondicionPago);                       
-
-                        // Encuentra el siguiente elemento editable en la misma fila o siguiente fila
-                        //var nextEditable = ($)
-
-                        // Establece el atributo contenteditable, enfoca y selecciona todo el texto
-                        $('#tipoProducto').focus();
-
-
-                    } else {
-                        alert(respuesta.mensaje);
-                        $('#inputCondicionPago').val('');
-                        $('#inputBonifCondicionPago').val('');
-                        currentEditableCondicionPago.select();
-                    }
-                },
-                error: function () {
-                    alert("Error al buscar la condición de pago.");
-                }
-            });
-        }
-
-        function buscarNombreVendedor(codigoVendedor, currentEditableVendedor) {
-            // Realiza una solicitud AJAX para obtener el nombre del producto desde nombre_producto.php
-            $.ajax({
-                type: "POST",
-                url: "backend/buscadorvendedores.php",
-                data: { codigoVendedor: codigoVendedor },
-                dataType: "json", // Indica que esperamos un JSON como respuesta
-                success: function (respuesta) {
-                    if (respuesta.success) {
-                        // Actualiza el contenido de la celda vacía con el nombre del producto obtenido
-                        $('#inputVendedor').val(respuesta.nombreVendedor);                       
-                        $('#codigoVendedor').val(respuesta.codigoVendedor);                       
-
-                        // Establece el atributo contenteditable, enfoca y selecciona todo el texto
-                        $('.editableFormCodProducto:first').attr('contenteditable', 'true').focus();
-
-
-                    } else {
-                        alert(respuesta.mensaje);
-                        $('#inputVendedor').val('');
-                        currentEditableVendedor.select();
-                    }
-                },
-                error: function () {
-                    alert("Error al buscar el nombre del Vendedor.");
-                }
-            });
-        }
-        
 
         $('#addPropiedadFom').submit(function (e) {
             e.preventDefault();
-
-            var allIds = [];
-            var allQty = [];
+            var list = $("#inputLista").val();
+            var allCod = [];
             var allPrice = [];
-            var allBonif1 = [];
-            var allBonif2 = [];
             
             // Obtener valores de arrays
             $('td.editableFormCodProducto').each(function () {
-                var id = $(this).text().trim();
-                if (id) {
-                    allIds.push(id);
-                }
-            });
-            $('td.editableQty').each(function () {
-                var qty = $(this).text().trim();
-                if (qty) {
-                    allQty.push(qty);
+                var cod = $(this).text().trim();
+                if (cod) {
+                    allCod.push(cod);
                 }
             });
             $('td.editablePrice').each(function () {
@@ -210,45 +162,21 @@
                 if (price) {
                     allPrice.push(price);
                 }
-            });
-            $('td.editableB1').each(function () {
-                var b1 = $(this).text().trim();
-                if (b1) {
-                    allBonif1.push(b1);
-                }
-            });
-            $('td.editableB2').each(function () {
-                var b2 = $(this).text().trim();
-                if (b2) {
-                    allBonif2.push(b2);
-                }
-            });
+            });   
+            
 
-            // Verificar si los arrays tienen al menos un elemento
-            if (allIds.length > 0 && allQty.length > 0 && allPrice.length > 0 && allBonif1.length > 0 && allBonif2.length > 0) {
-                // Preguntar al usuario si desea crear la factura
-                var confirmacion = confirm("¿Desea crear la factura?");
+            var confirmacion = confirm("¿Desea crear la factura?");
 
-                if (confirmacion) {
-                    // Concatenar los arrays en la cadena de consulta de la URL
-                    var queryString = 'backend/crearfactura.php?arrayIds=' + JSON.stringify(allIds) +
-                        '&arrayQty=' + JSON.stringify(allQty) +
-                        '&arrayPrice=' + JSON.stringify(allPrice) +
-                        '&arrayBonif1=' + JSON.stringify(allBonif1) +
-                        '&arrayBonif2=' + JSON.stringify(allBonif2);
-                        
-                    // Redirigir a la página con la cadena de consulta
-                    window.location.href = queryString;
-                }
-            } else {
-                // Informar al usuario que los arrays están vacíos
-                alert("Debe agregar al menos un producto antes de crear la factura.");
-                $('.editableFormCodProducto:first').focus();
-                eventoManejado = true;
-                setTimeout(function () {
-                    eventoManejado = false;
-                }, 100);
+            if (confirmacion) {
+                // Concatenar los arrays en la cadena de consulta de la URL
+                var queryString = 'backend/crearlistaprecios.php?&arrayCod=' + JSON.stringify(allCod) +
+                    '&arrayPrice=' + JSON.stringify(allPrice) +
+                    '&list=' + list;
+                    
+                // Redirigir a la página con la cadena de consulta
+                window.location.href = queryString;
             }
+           
         });
 });
 </script>
